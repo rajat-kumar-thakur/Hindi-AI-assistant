@@ -4,8 +4,25 @@ from langgraph.graph.message import add_messages
 from langchain_core.messages import SystemMessage
 from langgraph.graph import StateGraph, START, END
 from langchain.chat_models import init_chat_model
+from dotenv import load_dotenv
+import os
 
-llm = init_chat_model(model_provider="openai", model="gpt-5-mini")
+# Load environment variables
+load_dotenv()
+
+# Initialize LLM with explicit API key from environment
+llm = None
+
+def get_llm():
+    global llm
+    if llm is None:
+        # Reload environment variables to get latest values
+        load_dotenv(override=True)
+        api_key = os.getenv("OPENAI_API_KEY")
+        if not api_key:
+            raise ValueError("OPENAI_API_KEY not found in environment variables")
+        llm = init_chat_model(model_provider="openai", model="gpt-4o-mini", api_key=api_key)
+    return llm
 
 class State(TypedDict):
     messages: Annotated[list, add_messages]
@@ -13,7 +30,7 @@ class State(TypedDict):
 
 def chatbot(state: State):
     system_prompt = SystemMessage(content="""You are a helpful female AI assistant that speaks Hindi.""")
-    message = llm.invoke([system_prompt] + state["messages"])
+    message = get_llm().invoke([system_prompt] + state["messages"])
 
     return {"messages": message}
 
