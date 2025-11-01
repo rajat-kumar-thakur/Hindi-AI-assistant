@@ -13,8 +13,6 @@ A voice-enabled AI assistant that understands and responds in Hindi, featuring r
 - [Setup Instructions](#setup-instructions)
 - [Running the Application](#running-the-application)
 - [How It Works](#how-it-works)
-- [Challenges & Solutions](#challenges--solutions)
-- [Future Improvements](#future-improvements)
 - [Project Structure](#project-structure)
 
 ## 🎯 Overview
