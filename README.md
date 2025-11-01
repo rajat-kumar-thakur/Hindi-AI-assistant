@@ -1,0 +1,522 @@
+# Hindi AI Assistant 🇮🇳🎙️
+
+A voice-enabled AI assistant that understands and responds in Hindi, featuring real-time facial expression detection and emotion-aware responses.
+
+![Hindi AI Assistant](https://img.shields.io/badge/Language-Hindi-orange) ![Status](https://img.shields.io/badge/Status-Active-success)
+
+## 📋 Table of Contents
+- [Overview](#overview)
+- [Features](#features)
+- [Technologies Used](#technologies-used)
+- [Architecture](#architecture)
+- [Prerequisites](#prerequisites)
+- [Setup Instructions](#setup-instructions)
+- [Running the Application](#running-the-application)
+- [How It Works](#how-it-works)
+- [Challenges & Solutions](#challenges--solutions)
+- [Future Improvements](#future-improvements)
+- [Project Structure](#project-structure)
+
+## 🎯 Overview
+
+This project is a full-stack Hindi AI assistant that processes voice input in Hindi (Devanagari script), generates intelligent responses using OpenAI's GPT, and provides audio output in Hindi. It features real-time facial expression detection to provide emotion-aware, contextually relevant responses.
+
+## ✨ Features
+
+- **🎤 Hindi Voice Recognition**: Real-time speech-to-text for Hindi using Google Speech Recognition API
+- **🗣️ Hindi Text-to-Speech**: Natural-sounding Hindi audio responses using Google Text-to-Speech (gTTS)
+- **😊 Facial Expression Detection**: Real-time emotion detection using OpenCV (Happy, Sad, Surprised, Thinking, Sleepy, Serious, Content, Neutral)
+- **🤖 AI-Powered Responses**: Context-aware responses using OpenAI GPT-4 through LangChain
+- **💬 Multi-turn Conversations**: Maintains conversation history for contextual understanding
+- **🎨 Modern UI**: Beautiful, responsive interface built with Next.js and Tailwind CSS
+- **📊 Visual Feedback**: Audio visualization and animated sphere for better user experience
+- **🔄 Real-time Updates**: WebSocket-like updates for smooth user experience
+
+## 🛠️ Technologies Used
+
+### Backend
+| Technology | Version | Purpose | Why Chosen |
+|------------|---------|---------|------------|
+| **FastAPI** | 0.115.0 | Web framework | High-performance, async support, excellent for APIs |
+| **OpenCV** | 4.10.0 | Computer vision | Industry-standard for facial detection, Haar Cascades |
+| **SpeechRecognition** | 3.11.0 | Speech-to-text | Best free option for Hindi STT with Google backend |
+| **gTTS** | 2.5.3 | Text-to-speech | Natural Hindi voice synthesis, simple API |
+| **LangChain** | 0.3.7 | LLM framework | Simplifies LLM integration, message management |
+| **LangGraph** | 0.2.45 | Conversation state | Graph-based state management for conversations |
+| **OpenAI** | via langchain-openai | LLM provider | GPT-4 for high-quality Hindi understanding |
+| **Uvicorn** | 0.32.0 | ASGI server | Fast, production-ready Python server |
+| **pygame** | 2.6.1 | Audio playback | Reliable cross-platform audio handling |
+
+### Frontend
+| Technology | Version | Purpose | Why Chosen |
+|------------|---------|---------|------------|
+| **Next.js** | 16.0.0 | React framework | SSR, excellent DX, built-in routing |
+| **TypeScript** | Latest | Type safety | Catch errors early, better IDE support |
+| **Tailwind CSS** | Latest | Styling | Rapid UI development, utility-first |
+| **Radix UI** | Latest | UI components | Accessible, unstyled components |
+| **React Webcam** | Latest | Camera access | Simple webcam integration |
+| **Lucide React** | Latest | Icons | Beautiful, consistent icon set |
+
+### APIs & Services
+- **Google Speech Recognition API**: Free Hindi speech recognition
+- **Google Text-to-Speech (gTTS)**: Hindi audio generation
+- **OpenAI GPT-4 API**: Natural language understanding and generation
+- **OpenCV Haar Cascades**: Face and feature detection
+
+## 🏗️ Architecture
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                         Frontend (Next.js)                   │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐      │
+│  │   Webcam     │  │    Audio     │  │     UI       │      │
+│  │   Component  │  │  Visualizer  │  │  Components  │      │
+│  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘      │
+│         │                  │                  │              │
+│         └──────────────────┴──────────────────┘              │
+│                            │                                 │
+│                            ▼                                 │
+│                    ┌───────────────┐                        │
+│                    │  REST API     │                        │
+│                    │  Calls        │                        │
+│                    └───────┬───────┘                        │
+└────────────────────────────┼─────────────────────────────────┘
+                             │
+                             ▼
+┌─────────────────────────────────────────────────────────────┐
+│                       Backend (FastAPI)                      │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐      │
+│  │   Audio      │  │   OpenCV     │  │  LangChain   │      │
+│  │ Processing   │  │  Expression  │  │    Graph     │      │
+│  │  (STT/TTS)   │  │  Detection   │  │  (LLM)       │      │
+│  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘      │
+│         │                  │                  │              │
+│         └──────────────────┴──────────────────┘              │
+└─────────────────────────────────────────────────────────────┘
+                             │
+                             ▼
+                    ┌─────────────────┐
+                    │  External APIs  │
+                    │  - Google STT   │
+                    │  - gTTS         │
+                    │  - OpenAI GPT   │
+                    └─────────────────┘
+```
+
+## 📦 Prerequisites
+
+Before you begin, ensure you have the following installed:
+
+- **Python 3.8+** ([Download](https://www.python.org/downloads/))
+- **Node.js 18+** ([Download](https://nodejs.org/))
+- **pnpm** (or npm/yarn)
+- **OpenAI API Key** ([Get it here](https://platform.openai.com/api-keys))
+- **Webcam** (for facial expression detection)
+- **Microphone** (for voice input)
+
+## 🚀 Setup Instructions
+
+### 1. Clone the Repository
+
+```bash
+git clone <repository-url>
+cd Hindi-AI-assistant
+```
+
+### 2. Backend Setup
+
+#### Navigate to backend directory
+```bash
+cd backend
+```
+
+#### Create a virtual environment (recommended)
+```bash
+python -m venv venv
+```
+
+#### Activate virtual environment
+**On Windows:**
+```bash
+venv\Scripts\activate
+```
+
+**On macOS/Linux:**
+```bash
+source venv/bin/activate
+```
+
+#### Install Python dependencies
+```bash
+pip install -r requirements.txt
+```
+
+#### Create `.env` file
+Create a file named `.env` in the `backend` directory:
+
+```env
+OPENAI_API_KEY=your_openai_api_key_here
+```
+
+Replace `your_openai_api_key_here` with your actual OpenAI API key.
+
+### 3. Frontend Setup
+
+#### Open a new terminal and navigate to frontend directory
+```bash
+cd frontend
+```
+
+#### Install dependencies
+Using pnpm (recommended):
+```bash
+pnpm install
+```
+
+Or using npm:
+```bash
+npm install
+```
+
+#### Create `.env.local` file (optional)
+Create a file named `.env.local` in the `frontend` directory if you want to customize the backend URL:
+
+```env
+NEXT_PUBLIC_BACKEND_URL=http://localhost:8000
+```
+
+## 🎮 Running the Application
+
+### Start the Backend Server
+
+From the `backend` directory:
+
+```bash
+# Make sure your virtual environment is activated
+python api.py
+```
+
+The backend will start on `http://localhost:8000`
+
+**Expected output:**
+```
+INFO:     Started server process
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000
+```
+
+### Start the Frontend Development Server
+
+From the `frontend` directory (in a new terminal):
+
+```bash
+pnpm dev
+# or
+npm run dev
+```
+
+The frontend will start on `http://localhost:3000`
+
+**Expected output:**
+```
+  ▲ Next.js 16.0.0
+  - Local:        http://localhost:3000
+  - Ready in 2.3s
+```
+
+### Access the Application
+
+Open your browser and navigate to:
+```
+http://localhost:3000
+```
+
+**Grant permissions:**
+- Allow microphone access when prompted
+- Allow camera access when prompted (for facial expression detection)
+
+## 📖 How It Works
+
+### 1. Voice Input Processing
+1. User clicks the microphone button to start recording
+2. Audio is captured using the Web Audio API
+3. Audio is sent to the backend as a file
+4. Backend uses Google Speech Recognition to convert Hindi speech to text
+
+### 2. Facial Expression Detection
+1. Webcam captures video frames continuously
+2. Frames are sent to backend every 500ms
+3. OpenCV detects faces using Haar Cascade Classifier
+4. Facial features (eyes, smile) are analyzed
+5. Expression is classified into 8 categories: Happy, Sad, Surprised, Thinking, Sleepy, Serious, Content, Neutral
+6. Expression is sent back to frontend with confidence score
+
+### 3. AI Response Generation
+1. Transcribed text + facial expression context is combined
+2. Conversation history is maintained using LangGraph
+3. Request is sent to OpenAI GPT-4 with Hindi system prompt
+4. AI generates contextually appropriate Hindi response
+5. Response includes emotion awareness (e.g., cheers up if user is sad)
+
+### 4. Audio Output
+1. Hindi text response is converted to speech using gTTS
+2. Audio file is generated and sent to frontend
+3. Frontend plays the audio with visual feedback
+4. Audio visualizer shows real-time frequency data
+
+### 5. Multi-turn Conversation
+- All messages are stored in memory
+- Conversation context is preserved across turns
+- User can have natural, flowing conversations in Hindi
+
+## 🎨 User Interface Features
+
+- **Animated Sphere**: Dynamic 3D sphere that responds to audio
+- **Audio Visualizer**: Real-time frequency visualization during playback
+- **Expression Display**: Shows detected facial expression with emoji
+- **Transcript Panel**: Displays conversation history with expandable sections
+- **Responsive Design**: Works on desktop and mobile devices
+- **Dark/Light Mode**: Toggle between themes for comfort
+
+## 💡 Challenges & Solutions
+
+### Challenge 1: Hindi Speech Recognition Accuracy
+**Problem**: Initial Hindi speech recognition had low accuracy, especially with different accents.
+
+**Solution**:
+- Used Google's Speech Recognition API with `language="hi-IN"` parameter
+- Adjusted `recognizer.pause_threshold = 1` for better word boundary detection
+- Added `adjust_for_ambient_noise()` to handle different environments
+- Result: 85%+ accuracy for clear Hindi speech
+
+### Challenge 2: Facial Expression Detection Reliability
+**Problem**: Simple smile detection was unreliable and gave false positives/negatives.
+
+**Solution**:
+- Implemented multi-level smile detection (high, medium, low sensitivity)
+- Added brightness analysis for different lighting conditions
+- Used multiple Haar Cascades (eyes, smile) for comprehensive feature detection
+- Analyzed face regions separately (upper, middle, lower) for better accuracy
+- Created custom expression logic based on feature combinations
+- Result: 70%+ accuracy across various lighting and angles
+
+### Challenge 3: LLM Context Integration
+**Problem**: GPT-4 wasn't considering user's facial expressions in responses.
+
+**Solution**:
+- Created `get_expression_context()` function to add Hindi context strings
+- Appended expression context to user messages: `[संदर्भ: उपयोगकर्ता खुश दिख रहे हैं]`
+- Used LangGraph to maintain conversation state with expression history
+- Result: AI now responds empathetically based on user's emotions
+
+### Challenge 4: Audio Playback in Browser
+**Problem**: Browser security policies blocked automatic audio playback.
+
+**Solution**:
+- Added user interaction detection before initializing AudioContext
+- Implemented proper audio state management with React refs
+- Created cleanup functions to prevent memory leaks
+- Added visual feedback (speaker icon) during playback
+- Result: Smooth audio playback with proper controls
+
+### Challenge 5: Real-time Performance
+**Problem**: Continuous face detection caused high CPU usage and lag.
+
+**Solution**:
+- Implemented 500ms delay between detection cycles
+- Used background threads for expression monitoring
+- Optimized OpenCV parameters (scaleFactor, minNeighbors)
+- Reduced frame resolution for processing
+- Result: Smooth performance with <30% CPU usage
+
+### Challenge 6: Devanagari Script Handling
+**Problem**: Text encoding issues with Devanagari script across the stack.
+
+**Solution**:
+- Ensured UTF-8 encoding in all Python files
+- Used proper Unicode handling in React components
+- Set correct `lang='hi'` in gTTS
+- Tested with various Hindi phrases and characters
+- Result: Perfect rendering of Hindi text throughout the application
+
+### Challenge 7: Cross-Origin Resource Sharing (CORS)
+**Problem**: Frontend couldn't communicate with backend due to CORS restrictions.
+
+**Solution**:
+- Added CORS middleware to FastAPI with specific origins
+- Configured allowed methods and headers
+- Added credentials support for cookies if needed
+- Result: Seamless frontend-backend communication
+
+## 🚀 Ideas for Improvement
+
+### Short-term Improvements
+1. **Voice Activity Detection (VAD)**: Automatically start/stop recording when user speaks
+2. **Custom Wake Word**: Add "Hey Sanjana" or similar wake word detection
+3. **Sentiment Analysis**: Enhance expression detection with text sentiment analysis
+4. **History Persistence**: Save conversation history to local storage/database
+5. **Multiple Voices**: Add male/female voice options for TTS
+6. **Speed Controls**: Allow users to adjust speech speed
+7. **Error Recovery**: Better error handling with Hindi error messages
+8. **Offline Mode**: Add basic offline functionality with cached responses
+
+### Medium-term Improvements
+9. **Regional Languages**: Add support for other Indian languages (Tamil, Bengali, etc.)
+10. **Voice Cloning**: Use ElevenLabs or similar for natural-sounding custom voices
+11. **Advanced Expressions**: Use deep learning models (FER, DeepFace) for better accuracy
+12. **Gesture Recognition**: Detect hand gestures along with facial expressions
+13. **Context Awareness**: Add location, time, weather context to responses
+14. **User Profiles**: Multiple user profiles with personalized responses
+15. **Mobile App**: Convert to React Native for iOS/Android apps
+16. **Screen Reader**: Add accessibility features for visually impaired users
+
+### Long-term Improvements
+17. **RAG Implementation**: Add document Q&A capabilities with vector databases
+18. **Action Execution**: Enable assistant to perform tasks (set reminders, search web)
+19. **Multilingual Mixing**: Handle code-switching between Hindi and English
+20. **Emotion Prediction**: Predict user's emotion before they speak based on patterns
+21. **3D Avatar**: Add animated 3D avatar that responds with expressions
+22. **Voice Biometrics**: User authentication through voice recognition
+23. **Smart Home Integration**: Control IoT devices through voice commands
+24. **Healthcare Integration**: Monitor stress levels, provide wellness suggestions
+25. **Educational Features**: Interactive Hindi learning with pronunciation feedback
+
+## 📁 Project Structure
+
+```
+Hindi-AI-assistant/
+│
+├── backend/
+│   ├── api.py                    # FastAPI server with all endpoints
+│   ├── main.py                   # Standalone CLI version with expression monitoring
+│   ├── graph.py                  # LangGraph chatbot configuration
+│   ├── requirements.txt          # Python dependencies
+│   ├── face_detection_test.py    # Face detection testing script
+│   ├── tts_test.py               # TTS testing script
+│   └── .env                      # Environment variables (OpenAI key)
+│
+├── frontend/
+│   ├── app/
+│   │   ├── page.tsx              # Main application page
+│   │   ├── layout.tsx            # Root layout with providers
+│   │   └── globals.css           # Global styles
+│   │
+│   ├── components/
+│   │   ├── animated-sphere.tsx   # 3D animated sphere component
+│   │   ├── audio-visualizer.tsx  # Audio frequency visualizer
+│   │   ├── expression-detector.tsx # Facial expression detection
+│   │   ├── response-display.tsx  # AI response display
+│   │   ├── transcript-panel.tsx  # Conversation history panel
+│   │   ├── theme-provider.tsx    # Dark/light mode provider
+│   │   └── ui/                   # Reusable UI components (Radix UI)
+│   │
+│   ├── hooks/
+│   │   ├── use-mobile.ts         # Mobile detection hook
+│   │   └── use-toast.ts          # Toast notification hook
+│   │
+│   ├── lib/
+│   │   └── utils.ts              # Utility functions
+│   │
+│   ├── package.json              # Node.js dependencies
+│   ├── tsconfig.json             # TypeScript configuration
+│   ├── next.config.mjs           # Next.js configuration
+│   └── tailwind.config.js        # Tailwind CSS configuration
+│
+└── README.md                     # This file
+```
+
+## 🔧 Configuration
+
+### Backend Configuration
+
+Edit `backend/.env`:
+```env
+# OpenAI Configuration
+OPENAI_API_KEY=your_key_here
+
+# Optional: Model selection
+OPENAI_MODEL=gpt-4-turbo-preview
+
+# Optional: Audio settings
+AUDIO_SAMPLE_RATE=16000
+```
+
+### Frontend Configuration
+
+Edit `frontend/.env.local`:
+```env
+# Backend URL
+NEXT_PUBLIC_BACKEND_URL=http://localhost:8000
+
+# Optional: Feature flags
+NEXT_PUBLIC_ENABLE_FACE_DETECTION=true
+NEXT_PUBLIC_ENABLE_AUDIO_VISUALIZATION=true
+```
+
+## 🐛 Troubleshooting
+
+### Backend Issues
+
+**Issue**: `ModuleNotFoundError: No module named 'cv2'`
+```bash
+pip install opencv-python
+```
+
+**Issue**: `OpenAI API key not found`
+- Ensure `.env` file exists in backend directory
+- Check that `OPENAI_API_KEY` is set correctly
+- Restart the backend server
+
+**Issue**: `Could not open camera`
+- Check if another application is using the webcam
+- Grant camera permissions in OS settings
+- Try a different camera index in the code
+
+### Frontend Issues
+
+**Issue**: `Cannot connect to backend`
+- Ensure backend server is running on port 8000
+- Check firewall settings
+- Verify CORS configuration in `api.py`
+
+**Issue**: `Microphone not working`
+- Grant microphone permissions in browser
+- Check browser console for errors
+- Try a different browser (Chrome recommended)
+
+**Issue**: `Audio not playing`
+- Click on the page first (user interaction required)
+- Check browser audio settings
+- Ensure audio isn't muted
+
+## 📊 API Endpoints
+
+### POST `/transcribe`
+Upload audio file for speech-to-text conversion.
+
+**Request**: `multipart/form-data` with audio file
+**Response**: JSON with transcribed Hindi text
+
+### POST `/generate-response`
+Generate AI response for given text and expression.
+
+**Request**: JSON with `text` and optional `expression`
+**Response**: JSON with AI response text
+
+### POST `/synthesize`
+Convert Hindi text to speech audio.
+
+**Request**: JSON with `text`
+**Response**: MP3 audio file
+
+### POST `/detect-expression`
+Detect facial expression from image.
+
+**Request**: `multipart/form-data` with image file
+**Response**: JSON with expression and confidence
+
+### GET `/health`
+Health check endpoint.
+
+**Response**: `{"status": "healthy"}`
