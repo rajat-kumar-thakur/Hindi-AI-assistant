@@ -10,6 +10,8 @@ import numpy as np
 
 load_dotenv()
 
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+
 messages = []
 current_expression = {"expression": "Neutral", "detected": False}
 expression_lock = threading.Lock()
