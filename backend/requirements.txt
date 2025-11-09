@@ -9,6 +9,7 @@ opencv-python
 numpy
 langchain
 langchain-openai
+langchain-google-genai
 langgraph
 pydub
 requests

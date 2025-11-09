@@ -18,10 +18,10 @@ def get_llm():
     if llm is None:
         # Reload environment variables to get latest values
         load_dotenv(override=True)
-        api_key = os.getenv("OPENAI_API_KEY")
+        api_key = os.getenv("GOOGLE_API_KEY")
         if not api_key:
-            raise ValueError("OPENAI_API_KEY not found in environment variables")
-        llm = init_chat_model(model_provider="openai", model="gpt-4o-mini", api_key=api_key)
+            raise ValueError("GOOGLE_API_KEY not found in environment variables")
+        llm = init_chat_model(model_provider="google_genai", model="gemini-2.5-flash-lite", api_key=api_key)
     return llm
 
 class State(TypedDict):
